@@ -1,0 +1,50 @@
+# Важно!!! Когда закончите не забывайте закрывать все процессы Firefox/Chome через диспечер задач, чтобы не грузить память
+
+# ****************************** Основные настройки ******************************************
+#_____________________________________________________________________________________________________________
+home_page: https://www.mvideo.ru/
+item_page: https://www.mvideo.ru/products/
+product_ids:
+  - '10022198'
+  - '6013764'
+  - '30058378'
+  - '20038516'
+
+
+#_____________________________________________________________________________________________________________
+
+# ************************************ Дополнительные настройки ******************************
+#_____________________________________________________________________________________________________________
+
+# Firefox / Chrome
+WEBDRIVER: Chrome
+
+# Уровень логирования
+log_level: TRACE
+
+# ставить true чтобы запустить в фоне. Только после получения куки
+headless: false
+
+delay: 0.5
+wait_for_delay: 5
+home_delay: 5
+#_____________________________________________________________________________________________________________
+
+store_api:
+  product_prices_url: https://www.mvideo.ru/bff/products/prices
+  product_details_url: https://www.mvideo.ru/bff/product-details
+  product_prices_params:
+    productIds: ""
+    isPromoApplied: true
+    addBonusRubles: true
+    isPricingEngineFinalPrice: true
+
+  product_details_params:
+    productId: ""
+
+  headers:
+    accept: "*/*"
+    accept-encoding: gzip, deflate, br
+    accept-language: ru,en;q=0.9,la;q=0.8
+    cookie: COMPARISON_INDICATOR=false; MAIN_PAGE_VARIATION=5; MVID_ABC_TEST_WIDGET=0; MVID_AB_TEST_COMPARE_ONBOARDING=true; MVID_ADDRESS_COMMENT_AB_TEST=2; MVID_BLACK_FRIDAY_ENABLED=true; MVID_CALC_BONUS_RUBLES_PROFIT=false; MVID_CART_MULTI_DELETE=false; MVID_CITY_ID=CityR_74; MVID_FILTER_TOOLTIP=2; MVID_FLOCKTORY_ON=true; MVID_GEOLOCATION_NEEDED=true; MVID_GUEST_ID=19912074102; MVID_IS_NEW_BR_WIDGET=true; MVID_KLADR_ID=0500000100000; MVID_LAYOUT_TYPE=1; MVID_NEW_ACCESSORY=true; MVID_NEW_MBONUS_BLOCK=true; MVID_PRICE_FIRST=2; MVID_PRM20_CMS=true; MVID_REGION_ID=74; MVID_REGION_SHOP=S960; MVID_TIMEZONE_OFFSET=3; PRESELECT_COURIER_DELIVERY_FOR_KBT=true; PROMOLISTING_WITHOUT_STOCK_AB_TEST=2; flacktory=no; popmechanic_sbjs_migrations=popmechanic_1418474375998%3D1%7C%7C%7C1471519752600%3D1%7C%7C%7C1471519752605%3D1; authError=; SMSError=; BIGipServeratg-ps-prod_tcp80=2969885706.20480.0000; bIPs=-971835924; gdeslon.ru.user_id=37b22d4e-81ca-4191-b9e1-f9373723067b; gdeslon.ru.__arc_domain=gdeslon.ru; tmr_lvidTS=1644849809228; tmr_lvid=606d915dd14a3b6ba341e2ad9cb47624; st_uid=da7eb4d4fb5962a3dbdde53e76f2f259; advcake_track_id=1eec4cb8-dc39-9aac-ae86-df98e1216f10; advcake_session_id=7a24ff91-6ec9-7203-bc7f-106f122efa41; BIGipServeratg-ps-prod_tcp80_clone=2969885706.20480.0000; _fbp=fb.1.1644849809402.39955112; flocktory-uuid=aaf1428d-b80d-4b3b-8b99-1d0dba1eb142-1; afUserId=3b4d5ebd-93b6-4917-a6ba-101365fc49f6-p; AF_SYNC=1644849810184; adrdel=1; adrcid=ApArIb_StLM6HyS_VngLR7w; _gcl_au=1.1.95718121.1644849811; _ym_uid=1644849811168469852; _ym_d=1644849811; _ym_isad=2; uxs_uid=7aa43ea0-8da4-11ec-a679-f332cb1ace87; searchType2=3; _gaexp=GAX1.2.RlmXcyF3QYC322ouIwldnA.19113.x880; _gid=GA1.2.278821752.1644850385; __SourceTracker=https%3A%2F%2Fkwork.ru%2F__referral; admitad_deduplication_cookie=other_referral; wurfl_device_id=generic_web_browser; MVID_GTM_BROWSER_THEME=1; deviceType=desktop; __zzatgib-w-mvideo=MDA0dC0cTApcfEJcdGswPi17CT4VHThHKHIzd2VKYQtnLWIZURVacBdfV0lJMSwLRVRedXkVHEN5MF0OaHM9axdwSic8RxsOSxIjImJUdBwuGjxlH2ROWSVEXFRqJh8Ve3MpUQgOZD5Kc2UlLS1SKRIaYg9HV0VnXkZzXWcQREBNR0Jzdy1Dax9gSWIjQ1dJa2xSVTd+YhZCRBgvSzk9bnBhDysYIVQ1Xz9BYUpKPTdYH0t1MBI=2reesA==; __zzatgib-w-mvideo=MDA0dC0cTApcfEJcdGswPi17CT4VHThHKHIzd2VKYQtnLWIZURVacBdfV0lJMSwLRVRedXkVHEN5MF0OaHM9axdwSic8RxsOSxIjImJUdBwuGjxlH2ROWSVEXFRqJh8Ve3MpUQgOZD5Kc2UlLS1SKRIaYg9HV0VnXkZzXWcQREBNR0Jzdy1Dax9gSWIjQ1dJa2xSVTd+YhZCRBgvSzk9bnBhDysYIVQ1Xz9BYUpKPTdYH0t1MBI=2reesA==; cfidsgib-w-mvideo=a3Fa34AJM8lZ9LH2BSu4dPcv6KOmROuCO9cKXiffW81zr2/qR9ENhQowTI0IO7YyLi0iwFYusyutXsBdL7om+vCkFz1uypva0/nb4mqoOk+4ycgSo5HIbEMA3jVMh0dl3POipiCXS30JxlwLow/5M+H4za+O+CP6IqI3; cfidsgib-w-mvideo=a3Fa34AJM8lZ9LH2BSu4dPcv6KOmROuCO9cKXiffW81zr2/qR9ENhQowTI0IO7YyLi0iwFYusyutXsBdL7om+vCkFz1uypva0/nb4mqoOk+4ycgSo5HIbEMA3jVMh0dl3POipiCXS30JxlwLow/5M+H4za+O+CP6IqI3; gsscgib-w-mvideo=dzFptqJWFQHBezje8uj2E5L9AC0tJGU1N5FDt650UVzL+3hi3Ogvno+Oguz188aoHKYgYbvymHVN0E6oYzNEatB3kcXV5jdYlK/FqsBiHCd4B0HxK9fwLWYIDAfMTyK8gKIvFoTLVKvqei8vWZaY9pCm5X++eMwMp+FB2XSs0BCXdV5FfDMVWEgQGFsbrN27GeUwYkIaU0APFqYciSWRof2XxvyLiI6gkAltGgRBsq2+3LioRQHqbKmt3QWfUQ==; gsscgib-w-mvideo=dzFptqJWFQHBezje8uj2E5L9AC0tJGU1N5FDt650UVzL+3hi3Ogvno+Oguz188aoHKYgYbvymHVN0E6oYzNEatB3kcXV5jdYlK/FqsBiHCd4B0HxK9fwLWYIDAfMTyK8gKIvFoTLVKvqei8vWZaY9pCm5X++eMwMp+FB2XSs0BCXdV5FfDMVWEgQGFsbrN27GeUwYkIaU0APFqYciSWRof2XxvyLiI6gkAltGgRBsq2+3LioRQHqbKmt3QWfUQ==; fgsscgib-w-mvideo=SOyr7619878471f149b8badc07872764f5d700ce; fgsscgib-w-mvideo=SOyr7619878471f149b8badc07872764f5d700ce; cfidsgib-w-mvideo=jFFEPdVWTcvEtUp4enILQbRog8LaZyjlz52rmpObcZbN4khxo0MB/sw6X2q3yVIDffMcyyxGghzRmvyxsVuLPRv7eIhzVmBLkpwHQX+02SSs1neCNmhXUh86BA5RD3W/uOAMis2vIjvVA7RCE3eP54ythowfQeUAIzWt; CACHE_INDICATOR=false; mindboxDeviceUUID=abbba4d7-b2c6-4c6a-9510-802c47fcfe48; directCrm-session=%7B%22deviceGuid%22%3A%22abbba4d7-b2c6-4c6a-9510-802c47fcfe48%22%7D; _ga=GA1.1.893225376.1644849809; tmr_detect=0%7C1644866166115; tmr_reqNum=103; ADRUM=s=1644868777040&r=https%3A%2F%2Fwww.mvideo.ru%2Fproducts%2Fsmart-chasy-samsung-galaxy-watch4-classic-46mm-chernyi-sm-r890n-30058378%3F0; JSESSIONID=J0wZvK0Q8Skyq6Ncf0Bh5sZQxr5rC2Dt6GLs8C6fzQTv7F4NVJQJ!1025706177; ADRUM_BT=R:0|g:c86d87e0-7f3f-4c93-a901-6863dc9d869e2191963; MVID_ENVCLOUD=primary; _ga_CFMZTSS5FM=GS1.1.1644868777.6.0.1644868777.0; _ga_BNX5WPP3YK=GS1.1.1644868777.6.0.1644868777.60
+    user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.174 Mobile Safari/537.36
