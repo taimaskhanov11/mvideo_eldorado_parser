@@ -1,2 +1,4 @@
 logs
 .idea
+output
+config_dev.yaml
