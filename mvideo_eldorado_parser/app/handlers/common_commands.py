@@ -21,7 +21,7 @@ class TypeChoice(StatesGroup):
 
 async def start(message: types.Message, state: FSMContext):
     await state.finish()
-    await message.answer(VERSION, reply_markup=markups.main_menu_inline)
+    await message.answer(f"Версия {VERSION}", reply_markup=markups.main_menu_inline())
 
 
 async def run_stop_store_start(message: types.Message, state: FSMContext):

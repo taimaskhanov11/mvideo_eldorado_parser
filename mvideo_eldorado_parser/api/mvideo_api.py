@@ -49,8 +49,8 @@ class MvideoApi(BaseStoreApi):
         for product_id, price in prices.items():
             if product_id not in self.items:
                 logger.debug(f"{self}| Создание товара {product_id}")
-                name = await self.get_name(product_id)
-                item = await self.create_item(product_id, name, price)
+                # name = await self.get_name(product_id) #todo 16.02.2022 23:14 taima: добавить имя
+                item = await self.create_item(product_id, product_id, price)
                 await asyncio.sleep(self.delay_get_info)
                 logger.info(f"{self}| {item} Создан")
 

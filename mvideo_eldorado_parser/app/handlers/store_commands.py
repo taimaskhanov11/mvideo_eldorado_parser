@@ -8,9 +8,9 @@ from mvideo_eldorado_parser.api.eldorado_api import ELDORADO_API
 from mvideo_eldorado_parser.api.mvideo_api import MVIDEO_API
 from mvideo_eldorado_parser.app import markups
 from mvideo_eldorado_parser.app.markups.main_markups import choice_keyboard
-
-
 # todo 16.02.2022 23:00 taima: Почистить
+from mvideo_eldorado_parser.config.config import VERSION
+
 
 class ProductState(StatesGroup):
     add_products = State()
@@ -27,9 +27,8 @@ product_ids_pattern = re.compile(r"(\d+),?\s?")
 
 
 async def get_current_products(call: types.CallbackQuery, ):
-    store = re.findall(r"current_product_(.*)", call.data)[0]
-    answer = f"{store}\n"
-    product_ids = answer + "\n".join(store.product_ids)
+    store = STORES[re.findall(r"current_products_(.*)", call.data)[0]]
+    product_ids = "\n".join(store.product_ids)
     await call.message.answer(product_ids)
 
 
@@ -46,7 +45,7 @@ async def add_products_start(call: types.CallbackQuery, state: FSMContext):
 
 async def add_products_end(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    store = data["store"]
+    store = STORES[data["store"]]
     product_ids = re.findall(product_ids_pattern, message.text)
     store.add_products(product_ids)
     await message.answer("Товары успешно добавлены")
@@ -66,7 +65,7 @@ async def del_products_start(call: types.CallbackQuery, state: FSMContext):
 async def del_products_end(message: types.Message, state: FSMContext):
     product_ids = re.findall(product_ids_pattern, message.text)
     data = await state.get_data()
-    store = data["store"]
+    store = STORES[data["store"]]
     store.delete_products(product_ids)
     await message.answer(f"Товары {product_ids} успешно удалены")
     await state.finish()
@@ -82,7 +81,7 @@ async def clean_products_start(call: types.CallbackQuery, state: FSMContext):
 
 async def clean_products_end(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    store = data["store"]
+    store = STORES[data["store"]]
     if message.text == "Да":
         store.clean_products()
         await message.answer("Список товаров очищен")
@@ -96,9 +95,12 @@ async def store_launch(call: types.CallbackQuery):
     if store.launch_status:
         store.launch_status = False
         await call.message.answer(f"{store}| Парсер будет выключен в течении 3-5 минут")
+
     else:
         store.launch_status = True
         await call.message.answer(f"{store}| Парсер будет запущен в течении 20-30 секунд")
+    # await call.message.answer(f"Версия {VERSION}", reply_markup=markups.main_menu_inline())
+    await call.message.edit_reply_markup(markups.main_menu_inline())
 
 
 def register_products_handlers(dp: Dispatcher):
@@ -110,7 +112,7 @@ def register_products_handlers(dp: Dispatcher):
     )
 
     dp.register_callback_query_handler(
-        get_current_products,
+        store_launch,
         lambda call: call.data in ["mvideo_launch", "eldorado_launch"]
     )
 

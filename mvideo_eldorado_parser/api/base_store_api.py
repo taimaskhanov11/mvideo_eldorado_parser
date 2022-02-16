@@ -26,7 +26,7 @@ class BaseStoreApi(ABC):
         self.product_details_url = self.config["product_details_url"]
 
         self.product_ids: list = product_ids
-        self.items: dict[str, InventoryItem] = {}
+        self.items: dict[InventoryItem] = {}
 
         self.delay_get_info = config["delay_get_info"]
         self.delay_get_prices = config["delay_get_prices"]
@@ -36,6 +36,13 @@ class BaseStoreApi(ABC):
 
     def __str__(self):
         return self.__class__.__name__
+
+    @property #todo 16.02.2022 23:33 taima: доработать
+    def pretty_items(self):
+        res = f"[{self}]\n"
+        for item in self.items.values():
+            res += f"{item.name} "
+        return res
 
     def del_old_items(self):
         for product_id in self.items.keys():
@@ -81,7 +88,7 @@ class BaseStoreApi(ABC):
 
     async def checking_price_changes(self):
         new_prices = await self.get_prices()
-        results = [f"[{self}] | {datetime.datetime.now().replace(microsecond=0)}"]
+        results = [f"[{self}] | {datetime.datetime.now().replace(microsecond=0)}\n"]
         for product_id, new_price in new_prices.items():
             item = self.items[product_id]
             res = item.price_check(new_price)
