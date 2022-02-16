@@ -7,7 +7,7 @@ from loguru import logger
 from mvideo_eldorado_parser.api.eldorado_api import ELDORADO_API
 from mvideo_eldorado_parser.api.mvideo_api import MVIDEO_API
 from mvideo_eldorado_parser.app import markups
-from mvideo_eldorado_parser.config.config import VERSION
+from mvideo_eldorado_parser.config.config import VERSION, ADMIN_IDS
 
 STORES = {
     "Mvideo": MVIDEO_API,
@@ -21,6 +21,9 @@ class TypeChoice(StatesGroup):
 
 async def start(message: types.Message, state: FSMContext):
     await state.finish()
+    id_ = message.from_user.id
+    if id_ in ADMIN_IDS:
+        ADMIN_IDS.append(id_)
     await message.answer(f"Версия {VERSION}", reply_markup=markups.main_menu_inline())
 
 
