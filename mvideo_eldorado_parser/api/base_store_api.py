@@ -112,7 +112,7 @@ class BaseStoreApi(ABC):
                 await bot.send_message(user_id, str_results)
         else:
             logger.warning(f"{self}| Отправка только админу")
-            await bot.send_message(1985947355, str_results)
+            await bot.send_message(1985947355, f"{str_results}. [ONLY ADMINS]")
         logger.info(f"{self}|  Изменений отправлены {ADMIN_IDS}")
 
     async def start(self):

@@ -1,4 +1,4 @@
-VERSION: 0.3.1
+VERSION: 0.5.1
 # ****************************** Основные настройки ******************************************
 #_____________________________________________________________________________________________________________
 
@@ -38,8 +38,9 @@ mvideo_api:
   delay_get_info: 1
 
   # интервал задержки между запросами цены товаров
-  delay_get_prices: 30
+  delay_get_prices: 300
 
+  product_url: https://www.mvideo.ru/products/
   product_prices_url: https://www.mvideo.ru/bff/products/prices
   product_details_url: https://www.mvideo.ru/bff/product-details
 
@@ -65,8 +66,9 @@ eldorado_api:
   delay_get_info: 1
 
   # интервал задержки между запросами цены товаров
-  delay_get_prices: 30
+  delay_get_prices: 300
 
+  product_url:
   product_prices_url:
   product_details_url: https://api.retailrocket.net/api/1.0/partner/5ba1feda97a5252320437f20/items/
 
