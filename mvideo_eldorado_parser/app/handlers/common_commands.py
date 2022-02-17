@@ -21,9 +21,9 @@ class TypeChoice(StatesGroup):
 
 async def start(message: types.Message, state: FSMContext):
     await state.finish()
-    id_ = message.from_user.id
-    if id_ in ADMIN_IDS:
-        ADMIN_IDS.append(id_)
+    # id_ = message.from_user.id
+    # if  id_ not in ADMIN_IDS: #todo 17.02.2022 17:49 taima:
+    #     ADMIN_IDS.append(id_)
     await message.answer(f"Версия {VERSION}", reply_markup=markups.main_menu_inline())
 
 

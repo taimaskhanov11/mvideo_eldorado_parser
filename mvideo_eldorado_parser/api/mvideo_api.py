@@ -1,4 +1,5 @@
 import asyncio
+from pprint import pprint
 
 from loguru import logger
 
@@ -10,7 +11,7 @@ from mvideo_eldorado_parser.config.config import CONFIG, M_PRODUCT_IDS
 class MvideoApi(BaseStoreApi):
     """MvideoApi"""
 
-    async def get_info(self, product_id: str) -> dict:
+    async def get_item_data(self, product_id: str) -> dict:
         async with self.session.get(
                 self.product_details_url,
                 params=self.product_details_params | {"productId": product_id},
@@ -18,18 +19,34 @@ class MvideoApi(BaseStoreApi):
             item_info = await response.json()
             return item_info
 
-    async def get_name(self, product_id) -> str:
-        item_info = await self.get_info(product_id)
-        return item_info["body"]["name"]
+    async def get_item_fields(self, product_id) -> tuple:
+        item_info = await self.get_item_data(product_id)
+        name: str = item_info["body"]["name"]
+        sold_status: bool = item_info["body"]["status"]["soldOut"]
+        url: str = f"{self.product_url}{product_id}"
+        return name, sold_status, url
 
-    async def get_prices(self) -> dict[str, int]:
-        ids = ",".join(self.product_ids)
+    async def get_item_objects(self, product_ids=None) -> dict[str, InventoryItem]:
+        prices = await self.get_prices(product_ids or self.product_ids)
+        logger.info(f"{self}| Получены цены {prices}")
+        items_objs = {}
+        for product_id, price in prices.items():
+            logger.debug(f"{self}| Создание товара {product_id}")
+            name, sold_out, url = await self.get_item_fields(product_id)
+            item = self.create_item(product_id, name, price, sold_out, url)
+            logger.info(f"{self}| {item} Создан")
+            items_objs[product_id] = item
+        return items_objs
+
+    async def get_prices(self, product_ids=None) -> dict[str, int]:
+        ids = ",".join(product_ids or self.product_ids)
+        logger.info(ids)
         async with self.session.get(
                 self.product_prices_url,
                 params=self.product_prices_params | {"productIds": ids},
         ) as response:
             item_data = await response.json()
-
+        # pprint(item_data)
         item_prices = {}
         if item_data["success"] is True:
             items = item_data["body"]["materialPrices"]
@@ -37,22 +54,10 @@ class MvideoApi(BaseStoreApi):
                 item_id: str = item["productId"]
                 price: int = item["price"]["salePrice"]
                 item_prices[item_id] = price
+            logger.info(item_prices)
             return item_prices
         else:
             logger.critical(f"{self}| Ошибка при получении цен товаров {self.product_ids}")
-
-    async def create_items(self):
-        """Получение данных и создание объектов"""
-        prices = await self.get_prices()
-        logger.info(f"{self}| Получены цены {prices}")
-
-        for product_id, price in prices.items():
-            if product_id not in self.items:
-                logger.debug(f"{self}| Создание товара {product_id}")
-                # name = await self.get_name(product_id) #todo 16.02.2022 23:14 taima: добавить имя
-                item = await self.create_item(product_id, product_id, price)
-                await asyncio.sleep(self.delay_get_info)
-                logger.info(f"{self}| {item} Создан")
 
 
 MVIDEO_API = MvideoApi(CONFIG["mvideo_api"], M_PRODUCT_IDS)

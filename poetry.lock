@@ -385,6 +385,17 @@ colors = ["colorama (>=0.4.3,<0.5.0)"]
 plugins = ["setuptools"]
 
 [[package]]
+name = "itemid"
+version = "0.8.20"
+description = "A Library for shortening integers into abitrary set of characters"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+dev = ["pytest"]
+
+[[package]]
 name = "loguru"
 version = "0.6.0"
 description = "Python logging made (stupidly) simple"
@@ -823,7 +834,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10,<3.11"
-content-hash = "7a4d7eea805d855fdfeddad1bdb137daa957f34cea07105e34aea7dd5f539838"
+content-hash = "ee1fcafa218779a1e26befdda7dad32f9f6726b008c98f10a4a181a3e6e2e3a7"
 
 [metadata.files]
 aiogram = [
@@ -1251,6 +1262,9 @@ iniconfig = [
 isort = [
     {file = "isort-5.10.1-py3-none-any.whl", hash = "sha256:6f62d78e2f89b4500b080fe3a81690850cd254227f27f75c3a0c491a1f351ba7"},
     {file = "isort-5.10.1.tar.gz", hash = "sha256:e8443a5e7a020e9d7f97f1d7d9cd17c88bcb3bc7e218bf9cf5095fe550be2951"},
+]
+itemid = [
+    {file = "itemid-0.8.20.tar.gz", hash = "sha256:1c7260df013c11fd0ad3bd0e07c4e5da67813dce33fa4b18cc5259e8f8c811a4"},
 ]
 loguru = [
     {file = "loguru-0.6.0-py3-none-any.whl", hash = "sha256:4e2414d534a2ab57573365b3e6d0234dfb1d84b68b7f3b948e6fb743860a77c3"},

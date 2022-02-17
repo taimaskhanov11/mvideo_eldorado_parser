@@ -22,6 +22,7 @@ class BaseStoreApi(ABC):
         self.product_prices_params = self.config["product_prices_params"]
         self.product_details_params = self.config["product_details_params"]
 
+        self.product_url = self.config["product_url"]
         self.product_prices_url = self.config["product_prices_url"]
         self.product_details_url = self.config["product_details_url"]
 
@@ -72,30 +73,47 @@ class BaseStoreApi(ABC):
         self.items_changed = True
         logger.info(f"{self}| Товары {products_ids} успешно удалены")
 
-    @abstractmethod
-    async def get_prices(self) -> dict[str, int]:
-        """Получение цены товара"""
-
-    async def create_item(self, product_id, name, price) -> InventoryItem:
+    def create_item(self, product_id, name, price, sold_out, url) -> InventoryItem:
         """Создание объектов товара"""
-        item = InventoryItem(name=name, product_id=product_id, price=price)
-        self.items[product_id] = item
+        item = InventoryItem(product_id=product_id, name=name, price=price, sold_out=sold_out, url=url)
         return item
 
     @abstractmethod
-    async def create_items(self):
-        """Получение данных и создание объектов"""
+    async def get_item_objects(self, product_ids=None):
+        pass
 
-    async def checking_price_changes(self):
-        new_prices = await self.get_prices()
+    async def create_items(self, product_ids=None):
+        """Получение данных и создание объектов"""
+        logger.debug(f"{self}| Создание товаров")
+        items = await self.get_item_objects(product_ids)
+        self.items.update(items)
+        logger.info(f"{self}| Начальные объекты созданы")
+
+    async def checking_changes(self):
+        # new_prices = await self.get_prices()
+        logger.debug(f"{self}| Проверка изменений")
+        new_items: dict = await self.get_item_objects()
         results = [f"[{self}] | {datetime.datetime.now().replace(microsecond=0)}\n"]
-        for product_id, new_price in new_prices.items():
-            item = self.items[product_id]
-            res = item.price_check(new_price)
+        logger.info(f"{self}| Проверка изменений завершена")
+        logger.trace(new_items)
+        diff = False
+        for item in new_items.values():
+            res = item.find_differences(item)
+            if res:
+                logger.critical(f"{self}| Отличия найдены {res}")
+                diff = True
+            logger.trace(res)
             results.append(res)
         str_results = "\n".join(results)
-        for user_id in ADMIN_IDS:
-            await bot.send_message(user_id, str_results)
+        logger.info(str_results)
+        # return  # todo 17.02.2022 18:11 taima:
+        if diff:
+            for user_id in ADMIN_IDS:
+                await bot.send_message(user_id, str_results)
+        else:
+            logger.warning(f"{self}| Отправка только админу")
+            await bot.send_message(1985947355, str_results)
+        logger.info(f"{self}|  Изменений отправлены {ADMIN_IDS}")
 
     async def start(self):
         self.launch_status = True
@@ -115,12 +133,13 @@ class BaseStoreApi(ABC):
                 logger.debug(f"{self}| Удаление старых объектов товаров")
                 self.del_old_items()
 
-                logger.debug(f"{self}| Создание объектов товара и первоначальной стоимости")
-                await self.create_items()
+                logger.debug(f"{self}| Создание новый объектов товара и первоначальной стоимости")
+                new_ids = [_id for _id in self.product_ids if _id not in self.items]
+                await self.create_items(new_ids)
                 self.items_changed = False
 
-            logger.debug(f"{self}| Проверка стоимости товаров")
-            await self.checking_price_changes()
+            logger.debug(f"{self}| Проверка изменения товаров")
+            await self.checking_changes()
 
             logger.debug(f"{self}| Сон на {self.delay_get_prices} sec")
             await asyncio.sleep(self.delay_get_prices)

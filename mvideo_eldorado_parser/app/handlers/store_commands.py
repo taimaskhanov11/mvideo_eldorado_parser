@@ -87,7 +87,7 @@ async def clean_products_end(message: types.Message, state: FSMContext):
         await message.answer("Список товаров очищен")
     else:
         await message.answer("Действие отменено")
-        await state.finish()
+    await state.finish()
 
 
 async def store_launch(call: types.CallbackQuery):
