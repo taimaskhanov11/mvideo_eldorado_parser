@@ -27,7 +27,7 @@ class BaseStoreApi(ABC):
         self.product_details_url = self.config["product_details_url"]
 
         self.product_ids: list = product_ids
-        self.items: dict[str, InventoryItem] = {}
+        self.items: dict[InventoryItem] = {}
 
         self.delay_get_info = config["delay_get_info"]
         self.delay_get_prices = config["delay_get_prices"]
@@ -38,11 +38,11 @@ class BaseStoreApi(ABC):
     def __str__(self):
         return self.__class__.__name__
 
-    @property  # todo 16.02.2022 23:33 taima: доработать
+     # todo 16.02.2022 23:33 taima: доработать
     def pretty_items(self):
         res = f"[{self}]\n"
         for item in self.items.values():
-            res += f"{item.name} "
+            res = res + item.pretty() + '\n'
         return res
 
     def del_old_items(self):

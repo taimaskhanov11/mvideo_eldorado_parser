@@ -21,6 +21,9 @@ class InventoryItem(BaseModel):
         # return f"ID_{self.product_id:12}|{self.price:8}"
         return f"ID_{self.name:12}|{self.url}| "
 
+    def pretty(self):
+        return f"__[{self.product_id}]__\n{self.name}\n{self.url}\nЦена: {self.price}\nВ продаже: {self.sold_out}"
+
     def find_differences(self, item: 'InventoryItem') -> str:
         result = ""
         price_diff = self.price_check(item.price)

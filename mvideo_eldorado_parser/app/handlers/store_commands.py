@@ -28,8 +28,10 @@ product_ids_pattern = re.compile(r"(\d+),?\s?")
 
 async def get_current_products(call: types.CallbackQuery, ):
     store = STORES[re.findall(r"current_products_(.*)", call.data)[0]]
-    product_ids = "\n".join(store.product_ids)
-    await call.message.answer(f"[{store}]\n{product_ids}")
+    # product_ids = "\n".join(store.product_ids)
+
+    # await call.message.answer(f"[{store}]\n{product_ids}")
+    await call.message.answer(f"{store.pretty_items()}")
 
 
 async def add_products_start(call: types.CallbackQuery, state: FSMContext):
