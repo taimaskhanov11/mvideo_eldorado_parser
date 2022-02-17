@@ -29,7 +29,7 @@ product_ids_pattern = re.compile(r"(\d+),?\s?")
 async def get_current_products(call: types.CallbackQuery, ):
     store = STORES[re.findall(r"current_products_(.*)", call.data)[0]]
     product_ids = "\n".join(store.product_ids)
-    await call.message.answer(product_ids)
+    await call.message.answer(f"[{store}]\n{product_ids}")
 
 
 async def add_products_start(call: types.CallbackQuery, state: FSMContext):
@@ -48,7 +48,7 @@ async def add_products_end(message: types.Message, state: FSMContext):
     store = STORES[data["store"]]
     product_ids = re.findall(product_ids_pattern, message.text)
     store.add_products(product_ids)
-    await message.answer("Товары успешно добавлены")
+    await message.answer(f"[{store}]\nТовары успешно добавлены")
     await state.finish()
 
 
@@ -67,7 +67,7 @@ async def del_products_end(message: types.Message, state: FSMContext):
     data = await state.get_data()
     store = STORES[data["store"]]
     store.delete_products(product_ids)
-    await message.answer(f"Товары {product_ids} успешно удалены")
+    await message.answer(f"[{store}]\nТовары {product_ids} успешно удалены")
     await state.finish()
 
 
@@ -84,9 +84,9 @@ async def clean_products_end(message: types.Message, state: FSMContext):
     store = STORES[data["store"]]
     if message.text == "Да":
         store.clean_products()
-        await message.answer("Список товаров очищен")
+        await message.answer(f"[{store}]\nСписок товаров очищен")
     else:
-        await message.answer("Действие отменено")
+        await message.answer(f"Действие отменено")
     await state.finish()
 
 
