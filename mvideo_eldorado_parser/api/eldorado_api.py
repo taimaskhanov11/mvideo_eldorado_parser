@@ -22,6 +22,7 @@ class EldoradoApi(BaseStoreApi):
             return item_data
 
     async def get_item_objects(self, product_ids=None):
+        logger.info(product_ids)
         items_data = await self.get_items_data(product_ids)
         logger.info(f"{self}| Получены цены и данные {items_data}")
         items_objs = {}

@@ -40,12 +40,14 @@ class InventoryItem(BaseModel):
         if self.sold_out is True:
             if new_status is False:
                 answer += f" → {new_status} [❌] Больше не в продаже!"
+                self.sold_out = new_status
                 logger.info(f"answer")
                 diff = True
 
         elif self.sold_out is False:
             if new_status is True:
                 answer += f" → {new_status} [✅] Появилась в продаже!"
+                self.sold_out = new_status
                 logger.info(f"answer")
                 diff = True
 

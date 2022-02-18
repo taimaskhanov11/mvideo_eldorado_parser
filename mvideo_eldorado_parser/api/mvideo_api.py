@@ -22,7 +22,7 @@ class MvideoApi(BaseStoreApi):
     async def get_item_fields(self, product_id) -> tuple:
         item_info = await self.get_item_data(product_id)
         name: str = item_info["body"]["name"]
-        sold_status: bool = item_info["body"]["status"]["soldOut"]
+        sold_status: bool = not item_info["body"]["status"]["soldOut"]
         url: str = f"{self.product_url}{product_id}"
         return name, sold_status, url
 
@@ -33,6 +33,7 @@ class MvideoApi(BaseStoreApi):
         for product_id, price in prices.items():
             logger.debug(f"{self}| Создание товара {product_id}")
             name, sold_out, url = await self.get_item_fields(product_id)
+            logger.info(f"{self}| полученны данные {name, sold_out, url} ")
             item = self.create_item(product_id, name, price, sold_out, url)
             logger.info(f"{self}| {item} Создан")
             items_objs[product_id] = item
@@ -40,24 +41,26 @@ class MvideoApi(BaseStoreApi):
 
     async def get_prices(self, product_ids=None) -> dict[str, int]:
         ids = ",".join(product_ids or self.product_ids)
-        logger.info(ids)
-        async with self.session.get(
-                self.product_prices_url,
-                params=self.product_prices_params | {"productIds": ids},
-        ) as response:
-            item_data = await response.json()
-        # pprint(item_data)
         item_prices = {}
-        if item_data["success"] is True:
+        if ids:
+            logger.info(ids)
+            async with self.session.get(
+                    self.product_prices_url,
+                    params=self.product_prices_params | {"productIds": ids},
+            ) as response:
+                item_data = await response.json()
+            logger.trace(f"{self}| Получение цен!| {item_data}")
+            # pprint(item_data)
+            # if item_data["success"] is True:
             items = item_data["body"]["materialPrices"]
             for item in items:
                 item_id: str = item["productId"]
                 price: int = item["price"]["salePrice"]
                 item_prices[item_id] = price
             logger.info(item_prices)
-            return item_prices
-        else:
-            logger.critical(f"{self}| Ошибка при получении цен товаров {self.product_ids}")
+        return item_prices
+        # else:
+        #     logger.critical(f"{self}| Ошибка при получении цен товаров {self.product_ids}")
 
 
 MVIDEO_API = MvideoApi(CONFIG["mvideo_api"], M_PRODUCT_IDS)

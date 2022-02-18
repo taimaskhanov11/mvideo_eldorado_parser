@@ -38,11 +38,14 @@ class BaseStoreApi(ABC):
     def __str__(self):
         return self.__class__.__name__
 
-     # todo 16.02.2022 23:33 taima: доработать
+    # todo 16.02.2022 23:33 taima: доработать
     def pretty_items(self):
         res = f"[{self}]\n"
-        for item in self.items.values():
-            res = res + item.pretty() + '\n'
+        if bool(self.items):
+            for item in self.items.values():
+                res = res + item.pretty() + '\n'
+        else:
+            res += "Пусто"
         return res
 
     def del_old_items(self):
@@ -57,6 +60,7 @@ class BaseStoreApi(ABC):
         self.items_changed = True
         logger.info(f"{self}| Товары очищены!")
 
+    @logger.catch
     def add_products(self, product_ids):
         self.product_ids.extend(product_ids)
         self.items_changed = True
@@ -94,27 +98,30 @@ class BaseStoreApi(ABC):
         logger.debug(f"{self}| Проверка изменений")
         new_items: dict = await self.get_item_objects()
         results = [f"[{self}] | {datetime.datetime.now().replace(microsecond=0)}\n"]
-        logger.info(f"{self}| Проверка изменений завершена")
         logger.trace(new_items)
         diff = False
-        for item in new_items.values():
-            res = item.find_differences(item)
+        for _id, item in new_items.items():
+            old_item = self.items[_id]
+            res = old_item.find_differences(item)
             if res:
                 logger.critical(f"{self}| Отличия найдены {res}")
                 diff = True
             logger.trace(res)
             results.append(res)
         str_results = "\n".join(results)
-        logger.info(str_results)
+        logger.info(f"{self}| Проверка изменений завершена")
         # return  # todo 17.02.2022 18:11 taima:
         if diff:
+            logger.critical(f"Изменения найдены")
+            logger.info(str_results)
             for user_id in ADMIN_IDS:
                 await bot.send_message(user_id, str_results)
         else:
-            logger.warning(f"{self}| Отправка только админу")
-            await bot.send_message(1985947355, f"{str_results} [ONLY ADMINS]")
+            logger.warning(f"{self}| Изменения не обнаружены. Отправка только админу")
+            # await bot.send_message(1985947355, f"{self}\n[empty]\n[ONLY ADMINS]") #todo 18.02.2022 11:15 taima:
         logger.info(f"{self}|  Изменений отправлены {ADMIN_IDS}")
 
+    @logger.catch
     async def start(self):
         self.launch_status = True
         self.session = aiohttp.ClientSession(headers=self.headers)
@@ -126,7 +133,7 @@ class BaseStoreApi(ABC):
                 await asyncio.sleep(10)
                 continue
 
-            logger.debug(f"{self}| Проверка изменения товаров")
+            logger.debug(f"{self}| Проверка изменения текущих товаров")
             # проверка изменения товаров
             if self.items_changed:
                 # удалить старые если имеются
@@ -138,7 +145,7 @@ class BaseStoreApi(ABC):
                 await self.create_items(new_ids)
                 self.items_changed = False
 
-            logger.debug(f"{self}| Проверка изменения товаров")
+            logger.debug(f"{self}| Проверка изменения объектов товаров")
             await self.checking_changes()
 
             logger.debug(f"{self}| Сон на {self.delay_get_prices} sec")

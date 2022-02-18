@@ -50,7 +50,8 @@ async def add_products_end(message: types.Message, state: FSMContext):
     store = STORES[data["store"]]
     product_ids = re.findall(product_ids_pattern, message.text)
     store.add_products(product_ids)
-    await message.answer(f"[{store}]\nТовары успешно добавлены")
+    await message.answer(
+        f"[{store}]\nЕсли товары существуют они будут добавлены в течении 5-6 минут, в зависимости от количества")
     await state.finish()
 
 
@@ -69,7 +70,8 @@ async def del_products_end(message: types.Message, state: FSMContext):
     data = await state.get_data()
     store = STORES[data["store"]]
     store.delete_products(product_ids)
-    await message.answer(f"[{store}]\nТовары {product_ids} успешно удалены")
+    await message.answer(
+        f"[{store}]\nЕсли товары существуют они будут удалены в течении 5-6 минут, в зависимости от количества")
     await state.finish()
 
 
