@@ -118,7 +118,7 @@ class BaseStoreApi(ABC):
                 await bot.send_message(user_id, str_results)
         else:
             logger.warning(f"{self}| Изменения не обнаружены. Отправка только админу")
-            # await bot.send_message(1985947355, f"{self}\n[empty]\n[ONLY ADMINS]") #todo 18.02.2022 11:15 taima:
+            await bot.send_message(1985947355, f"{self}\n[empty]\n[ONLY ADMINS]") #todo 18.02.2022 11:15 taima:
         logger.info(f"{self}|  Изменений отправлены {ADMIN_IDS}")
 
     @logger.catch
