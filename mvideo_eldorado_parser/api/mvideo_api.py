@@ -42,6 +42,7 @@ class MvideoApi(BaseStoreApi):
             item = self.create_item(product_id, name, price, sold_out, url)
             logger.info(f"{self}| {item} Создан")
             items_objs[product_id] = item
+            await asyncio.sleep(2)
         return items_objs
 
     async def get_prices(self, product_ids=None) -> dict[str, int]:
