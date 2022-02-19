@@ -16,7 +16,12 @@ class MvideoApi(BaseStoreApi):
                 self.product_details_url,
                 params=self.product_details_params | {"productId": product_id},
         ) as response:
-            item_info = await response.json()
+            try:
+                item_info = await response.json() #todo 19.02.2022 13:04 taima:
+            except Exception as e:
+                await response.text()
+                logger.critical(e)
+                raise e
             return item_info
 
     async def get_item_fields(self, product_id) -> tuple:
