@@ -37,7 +37,7 @@ async def get_current_products(call: types.CallbackQuery, ):
 async def add_products_start(call: types.CallbackQuery, state: FSMContext):
     store = re.findall(r"add_products_(.*)", call.data)[0]
     await state.update_data(store=store)
-    await call.message.answer("Выберите парсер", reply_markup=markups.choice_store)
+    # await call.message.answer("Выберите парсер", reply_markup=markups.choice_store) #todo 19.02.2022 13:07 taima: найти решение укоротить код
     await call.message.answer(
         "Введите коды товаров для добавления через запятую. Например:\n"
         "12341, 234523452, 73324523, 5672345238, 933453452"

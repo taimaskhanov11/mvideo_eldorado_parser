@@ -151,4 +151,5 @@ class BaseStoreApi(ABC):
                 logger.debug(f"{self}| Сон на {self.delay_get_prices} sec")
                 await asyncio.sleep(self.delay_get_prices)
             except Exception as e:
+                await asyncio.sleep(60)
                 logger.critical(e)
