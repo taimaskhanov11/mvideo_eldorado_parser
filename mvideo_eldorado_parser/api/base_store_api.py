@@ -121,7 +121,7 @@ class BaseStoreApi(ABC):
             await bot.send_message(1985947355, f"{self}\n[empty]\n[ONLY ADMINS]")  # todo 18.02.2022 11:15 taima:
         logger.info(f"{self}|  Изменений отправлены {ADMIN_IDS}")
 
-    @logger.catch
+    # @logger.catch
     async def start(self):
         self.launch_status = True
         self.session = aiohttp.ClientSession(headers=self.headers)
