@@ -20,7 +20,7 @@ class MvideoApi(BaseStoreApi):
                 item_info = await response.json() #todo 19.02.2022 13:04 taima:
             except Exception as e:
                 logger.critical(e)
-                await response.text()
+                logger.critical(await response.text())
                 raise e
             return item_info
 
