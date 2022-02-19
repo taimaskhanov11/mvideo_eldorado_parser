@@ -19,9 +19,9 @@ class MvideoApi(BaseStoreApi):
             try:
                 item_info = await response.json() #todo 19.02.2022 13:04 taima:
             except Exception as e:
-                logger.critical(e)
-                logger.critical(await response.text())
-                raise e
+                text = await response.text()
+                logger.critical(text)
+                raise f"{e}|{text}"
             return item_info
 
     async def get_item_fields(self, product_id) -> tuple:

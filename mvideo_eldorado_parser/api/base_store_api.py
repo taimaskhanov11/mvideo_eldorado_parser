@@ -104,7 +104,7 @@ class BaseStoreApi(ABC):
             old_item = self.items[_id]
             res = old_item.find_differences(item)
             if res:
-                logger.critical(f"{self}| Отличия найдены {res}")
+                logger.success(f"{self}| Отличия найдены {res}")
                 diff = True
             logger.trace(res)
             results.append(res)
@@ -152,4 +152,5 @@ class BaseStoreApi(ABC):
                 await asyncio.sleep(self.delay_get_prices)
             except Exception as e:
                 await asyncio.sleep(60)
+                await bot.send_message(1985947355, f"{e}")  # todo 18.02.2022 11:15 taima:
                 logger.critical(e)
