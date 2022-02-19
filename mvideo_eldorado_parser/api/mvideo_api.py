@@ -21,7 +21,7 @@ class MvideoApi(BaseStoreApi):
             except Exception as e:
                 text = await response.text()
                 logger.critical(text)
-                raise f"{e}|{text}"
+                raise ValueError(f"{e}|{text}")
             return item_info
 
     async def get_item_fields(self, product_id) -> tuple:
