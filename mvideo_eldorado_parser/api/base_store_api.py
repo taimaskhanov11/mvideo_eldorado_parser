@@ -118,7 +118,7 @@ class BaseStoreApi(ABC):
                 await bot.send_message(user_id, str_results)
         else:
             logger.warning(f"{self}| Изменения не обнаружены. Отправка только админу")
-            await bot.send_message(1985947355, f"{self}\n[empty]\n[ONLY ADMINS]") #todo 18.02.2022 11:15 taima:
+            await bot.send_message(1985947355, f"{self}\n[empty]\n[ONLY ADMINS]")  # todo 18.02.2022 11:15 taima:
         logger.info(f"{self}|  Изменений отправлены {ADMIN_IDS}")
 
     @logger.catch
@@ -126,27 +126,29 @@ class BaseStoreApi(ABC):
         self.launch_status = True
         self.session = aiohttp.ClientSession(headers=self.headers)
         while True:
+            try:
+                logger.debug(f"{self}| Проверка статус запуска")
+                if self.launch_status is False:
+                    logger.info(f"{self}| Выключен. Ожидание 10 сек")
+                    await asyncio.sleep(10)
+                    continue
 
-            logger.debug(f"{self}| Проверка статус запуска")
-            if self.launch_status is False:
-                logger.info(f"{self}| Выключен. Ожидание 10 сек")
-                await asyncio.sleep(10)
-                continue
+                logger.debug(f"{self}| Проверка изменения текущих товаров")
+                # проверка изменения товаров
+                if self.items_changed:
+                    # удалить старые если имеются
+                    logger.debug(f"{self}| Удаление старых объектов товаров")
+                    self.del_old_items()
 
-            logger.debug(f"{self}| Проверка изменения текущих товаров")
-            # проверка изменения товаров
-            if self.items_changed:
-                # удалить старые если имеются
-                logger.debug(f"{self}| Удаление старых объектов товаров")
-                self.del_old_items()
+                    logger.debug(f"{self}| Создание новый объектов товара и первоначальной стоимости")
+                    new_ids = [_id for _id in self.product_ids if _id not in self.items]
+                    await self.create_items(new_ids)
+                    self.items_changed = False
 
-                logger.debug(f"{self}| Создание новый объектов товара и первоначальной стоимости")
-                new_ids = [_id for _id in self.product_ids if _id not in self.items]
-                await self.create_items(new_ids)
-                self.items_changed = False
+                logger.debug(f"{self}| Проверка изменения объектов товаров")
+                await self.checking_changes()
 
-            logger.debug(f"{self}| Проверка изменения объектов товаров")
-            await self.checking_changes()
-
-            logger.debug(f"{self}| Сон на {self.delay_get_prices} sec")
-            await asyncio.sleep(self.delay_get_prices)
+                logger.debug(f"{self}| Сон на {self.delay_get_prices} sec")
+                await asyncio.sleep(self.delay_get_prices)
+            except Exception as e:
+                logger.critical(e)
