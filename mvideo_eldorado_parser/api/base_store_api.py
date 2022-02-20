@@ -152,5 +152,4 @@ class BaseStoreApi(ABC):
                 await asyncio.sleep(self.delay_get_prices)
             except Exception as e:
                 await asyncio.sleep(60)
-                await bot.send_message(1985947355, f"{e}")  # todo 18.02.2022 11:15 taima:
                 logger.critical(e)

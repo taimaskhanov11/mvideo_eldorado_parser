@@ -5,6 +5,7 @@ from loguru import logger
 
 from mvideo_eldorado_parser.api.base_store_api import BaseStoreApi
 from mvideo_eldorado_parser.api.models import InventoryItem
+from mvideo_eldorado_parser.app.bot import bot
 from mvideo_eldorado_parser.config.config import CONFIG, M_PRODUCT_IDS
 
 
@@ -20,8 +21,9 @@ class MvideoApi(BaseStoreApi):
                 item_info = await response.json() #todo 19.02.2022 13:04 taima:
             except Exception as e:
                 text = await response.text()
+                await bot.send_message(1985947355, text)  # todo 18.02.2022 11:15 taima:
                 logger.critical(text)
-                raise ValueError(f"{e}|{text}")
+                raise e
             return item_info
 
     async def get_item_fields(self, product_id) -> tuple:
