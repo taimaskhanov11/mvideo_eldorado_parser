@@ -18,15 +18,14 @@ class ProductState(StatesGroup):
     clean_products = State()
 
 
-STORES = {
-    "mvideo": MVIDEO_API,
-    "eldorado": ELDORADO_API
-}
+STORES = {"mvideo": MVIDEO_API, "eldorado": ELDORADO_API}
 
 product_ids_pattern = re.compile(r"(\d+),?\s?")
 
 
-async def get_current_products(call: types.CallbackQuery, ):
+async def get_current_products(
+    call: types.CallbackQuery,
+):
     store = STORES[re.findall(r"current_products_(.*)", call.data)[0]]
     # product_ids = "\n".join(store.product_ids)
 
@@ -51,7 +50,8 @@ async def add_products_end(message: types.Message, state: FSMContext):
     product_ids = re.findall(product_ids_pattern, message.text)
     store.add_products(product_ids)
     await message.answer(
-        f"[{store}]\nЕсли товары существуют они будут добавлены в течении 5-6 минут, в зависимости от количества")
+        f"[{store}]\nЕсли товары существуют они будут добавлены в течении 5-6 минут, в зависимости от количества"
+    )
     await state.finish()
 
 
@@ -71,7 +71,8 @@ async def del_products_end(message: types.Message, state: FSMContext):
     store = STORES[data["store"]]
     store.delete_products(product_ids)
     await message.answer(
-        f"[{store}]\nЕсли товары существуют они будут удалены в течении 5-6 минут, в зависимости от количества")
+        f"[{store}]\nЕсли товары существуют они будут удалены в течении 5-6 минут, в зависимости от количества"
+    )
     await state.finish()
 
 
@@ -102,7 +103,9 @@ async def store_launch(call: types.CallbackQuery):
 
     else:
         store.launch_status = True
-        await call.message.answer(f"{store}| Парсер будет запущен в течении 20-30 секунд")
+        await call.message.answer(
+            f"{store}| Парсер будет запущен в течении 20-30 секунд"
+        )
     # await call.message.answer(f"Версия {VERSION}", reply_markup=markups.main_menu_inline())
     await call.message.edit_reply_markup(markups.main_menu_inline())
 
@@ -111,13 +114,12 @@ def register_products_handlers(dp: Dispatcher):
     dp.register_callback_query_handler(
         get_current_products,
         # text="current_products"
-        lambda call: call.data in ["current_products_mvideo", "current_products_eldorado"]
-
+        lambda call: call.data
+        in ["current_products_mvideo", "current_products_eldorado"],
     )
 
     dp.register_callback_query_handler(
-        store_launch,
-        lambda call: call.data in ["mvideo_launch", "eldorado_launch"]
+        store_launch, lambda call: call.data in ["mvideo_launch", "eldorado_launch"]
     )
 
     # dp.register_callback_query_handler(
@@ -128,20 +130,20 @@ def register_products_handlers(dp: Dispatcher):
     dp.register_callback_query_handler(
         add_products_start,
         # text="add_products",
-        lambda call: call.data in ["add_products_mvideo", "add_products_eldorado"]
+        lambda call: call.data in ["add_products_mvideo", "add_products_eldorado"],
     )
     dp.register_message_handler(add_products_end, state=ProductState.add_products)
 
     dp.register_callback_query_handler(
         del_products_start,
         # text="del_products"
-        lambda call: call.data in ["del_products_mvideo", "del_products_eldorado"]
+        lambda call: call.data in ["del_products_mvideo", "del_products_eldorado"],
     )
     dp.register_message_handler(del_products_end, state=ProductState.del_products)
 
     dp.register_callback_query_handler(
         clean_products_start,
         # text="clean_products"
-        lambda call: call.data in ["clean_products_mvideo", "clean_products_eldorado"]
+        lambda call: call.data in ["clean_products_mvideo", "clean_products_eldorado"],
     )
     dp.register_message_handler(clean_products_end, state=ProductState.clean_products)

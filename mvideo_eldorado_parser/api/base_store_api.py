@@ -43,7 +43,7 @@ class BaseStoreApi(ABC):
         res = f"[{self}]\n"
         if bool(self.items):
             for item in self.items.values():
-                res = res + item.pretty() + '\n'
+                res = res + item.pretty() + "\n"
         else:
             res += "Пусто"
         return res
@@ -51,7 +51,9 @@ class BaseStoreApi(ABC):
     def del_old_items(self):
         for product_id in self.items.keys():
             if product_id not in self.product_ids:
-                logger.warning(f"{self}| Удаление старого товара {self.items[product_id]}")
+                logger.warning(
+                    f"{self}| Удаление старого товара {self.items[product_id]}"
+                )
                 del self.items[product_id]
 
     def clean_products(self):
@@ -79,7 +81,9 @@ class BaseStoreApi(ABC):
 
     def create_item(self, product_id, name, price, sold_out, url) -> InventoryItem:
         """Создание объектов товара"""
-        item = InventoryItem(product_id=product_id, name=name, price=price, sold_out=sold_out, url=url)
+        item = InventoryItem(
+            product_id=product_id, name=name, price=price, sold_out=sold_out, url=url
+        )
         return item
 
     @abstractmethod
@@ -118,7 +122,9 @@ class BaseStoreApi(ABC):
                 await bot.send_message(user_id, str_results)
         else:
             logger.warning(f"{self}| Изменения не обнаружены. Отправка только админу")
-            await bot.send_message(1985947355, f"{self}\n[empty]\n[ONLY ADMINS]")  # todo 18.02.2022 11:15 taima:
+            await bot.send_message(
+                1985947355, f"{self}\n[empty]\n[ONLY ADMINS]"
+            )  # todo 18.02.2022 11:15 taima:
         logger.info(f"{self}|  Изменений отправлены {ADMIN_IDS}")
 
     # @logger.catch
@@ -140,7 +146,9 @@ class BaseStoreApi(ABC):
                     logger.debug(f"{self}| Удаление старых объектов товаров")
                     self.del_old_items()
 
-                    logger.debug(f"{self}| Создание новый объектов товара и первоначальной стоимости")
+                    logger.debug(
+                        f"{self}| Создание новый объектов товара и первоначальной стоимости"
+                    )
                     new_ids = [_id for _id in self.product_ids if _id not in self.items]
                     await self.create_items(new_ids)
                     self.items_changed = False

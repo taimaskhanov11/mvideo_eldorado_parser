@@ -14,11 +14,11 @@ class MvideoApi(BaseStoreApi):
 
     async def get_item_data(self, product_id: str) -> dict:
         async with self.session.get(
-                self.product_details_url,
-                params=self.product_details_params | {"productId": product_id},
+            self.product_details_url,
+            params=self.product_details_params | {"productId": product_id},
         ) as response:
             try:
-                item_info = await response.json() #todo 19.02.2022 13:04 taima:
+                item_info = await response.json()  # todo 19.02.2022 13:04 taima:
             except Exception as e:
                 text = await response.text()
                 await bot.send_message(1985947355, text)  # todo 18.02.2022 11:15 taima:
@@ -41,7 +41,7 @@ class MvideoApi(BaseStoreApi):
         for product_id, price in prices.items():
             logger.debug(f"{self}| Создание товара {product_id}")
             name, sold_out, url = await self.get_item_fields(product_id)
-            logger.info(f"{self}| полученны данные {name, sold_out, url} ")
+            logger.info(f"{self}| получены данные {name, sold_out, url} ")
             item = self.create_item(product_id, name, price, sold_out, url)
             logger.info(f"{self}| {item} Создан")
             items_objs[product_id] = item
@@ -54,8 +54,8 @@ class MvideoApi(BaseStoreApi):
         if ids:
             logger.info(ids)
             async with self.session.get(
-                    self.product_prices_url,
-                    params=self.product_prices_params | {"productIds": ids},
+                self.product_prices_url,
+                params=self.product_prices_params | {"productIds": ids},
             ) as response:
                 item_data = await response.json()
             logger.trace(f"{self}| Получение цен!| {item_data}")

@@ -1,12 +1,7 @@
-from mvideo_eldorado_parser.api.base_store_api import BaseStoreApi
-
-import asyncio
-
 from loguru import logger
 
 from mvideo_eldorado_parser.api.base_store_api import BaseStoreApi
-from mvideo_eldorado_parser.api.models import InventoryItem
-from mvideo_eldorado_parser.config.config import E_PRODUCT_IDS, CONFIG
+from mvideo_eldorado_parser.config.config import CONFIG, E_PRODUCT_IDS
 
 
 class EldoradoApi(BaseStoreApi):
@@ -15,8 +10,8 @@ class EldoradoApi(BaseStoreApi):
     async def get_items_data(self, product_ids=None):
         ids = ",".join(product_ids or self.product_ids)
         async with self.session.get(
-                self.product_details_url,
-                params=self.product_details_params | {"itemsIds": ids},
+            self.product_details_url,
+            params=self.product_details_params | {"itemsIds": ids},
         ) as response:
             item_data = await response.json()
             return item_data
@@ -39,4 +34,4 @@ class EldoradoApi(BaseStoreApi):
         return items_objs
 
 
-ELDORADO_API = EldoradoApi(CONFIG['eldorado_api'], E_PRODUCT_IDS)
+ELDORADO_API = EldoradoApi(CONFIG["eldorado_api"], E_PRODUCT_IDS)

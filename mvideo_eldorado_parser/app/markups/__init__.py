@@ -1,1 +1,1 @@
-from .main_markups import main_menu_inline, choice_store
+from .main_markups import choice_store, main_menu_inline

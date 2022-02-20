@@ -24,7 +24,7 @@ class InventoryItem(BaseModel):
     def pretty(self):
         return f"__[{self.product_id}]__\n{self.name}\n{self.url}\nЦена: {self.price}\nВ продаже: {self.sold_out}"
 
-    def find_differences(self, item: 'InventoryItem') -> str:
+    def find_differences(self, item: "InventoryItem") -> str:
         result = ""
         price_diff = self.price_check(item.price)
         sold_out_diff = self.sold_out_check(item.sold_out)
@@ -53,7 +53,9 @@ class InventoryItem(BaseModel):
 
         return answer if diff else ""
 
-    def price_check(self, new_price):  # todo 15.02.2022 21:11 taima: сделать что то с логами
+    def price_check(
+        self, new_price
+    ):  # todo 15.02.2022 21:11 taima: сделать что то с логами
         # print(type(new_price))
         answer = f"{self}{self.price} "
         diff = False
